@@ -1,0 +1,14 @@
+[package]
+name = "sign-cert-remote"
+version = "0.1.0"
+authors = ["Dirkjan Ochtman <dirkjan@ochtman.nl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rcgen = { git = "https://github.com/djc/rcgen", branch = "csr-to-cert", features = ["pem", "x509-parser"] }
+x509-parser = { git = "https://github.com/djc/x509-parser", branch = "csr", features = ["verify"] }
+
+[patch.crates-io]
+oid-registry = { git = "https://github.com/djc/oid-registry", branch = "extension-request" }
