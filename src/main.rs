@@ -1,7 +1,10 @@
+use std::fs::write;
+
 use rcgen::{
     BasicConstraints, Certificate, CertificateParams, CertificateSigningRequest, DnType, IsCa,
 };
-use std::fs::write;
+use x509_parser::certification_request::X509CertificationRequest;
+use x509_parser::prelude::FromDer;
 
 fn main() {
     let ca = Ca::new();
@@ -45,11 +48,11 @@ impl Ca {
         let csr_der = x509_parser::pem::parse_x509_pem(csr_pem.as_bytes())
             .unwrap()
             .1;
-        let csr = x509_parser::parse_x509_csr_der(&csr_der.contents)
+        let csr = X509CertificationRequest::from_der(&csr_der.contents)
             .unwrap()
             .1;
-        csr.verify_signature(None).unwrap();
-        let csr = CertificateSigningRequest::from_x509(&csr).unwrap();
+        csr.verify_signature().unwrap();
+        let csr = CertificateSigningRequest::from_der(&csr_der.contents).unwrap();
         csr.serialize_pem_with_signer(&self.certificate).unwrap()
     }
 }
